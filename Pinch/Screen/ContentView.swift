@@ -9,10 +9,12 @@ import SwiftUI
 
 struct ContentView: View {
     
-    // MARK: - PROPERTIES
+    // MARK: - State
     @State private var isAnimating: Bool = false
     @State private var imageScale: CGFloat = 1.0
     @State private var imageOffset: CGSize = .zero
+    @State private var drawerOpen: Bool = false
+    @State private var chevronOpen: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -113,6 +115,34 @@ struct ContentView: View {
                     .cornerRadius(12)
                     .opacity(isAnimating ? 1 : 0)
                 }
+            }
+            // MARK: - Drawer
+            .overlay(alignment: .topTrailing) {
+                HStack {
+                    // Handle
+                    Image(systemName: chevronOpen ? "chevron.compact.right" : "chevron.compact.left")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 40)
+                        .padding(8)
+                        .foregroundStyle(.secondary)
+                        .onTapGesture {
+                            withAnimation(.easeOut) {
+                                drawerOpen.toggle()
+                            }
+                            chevronOpen.toggle()
+                        }
+                    // Thumbnails
+                    Spacer()
+                    
+                } //: Drawer
+                .padding(EdgeInsets(top: 16, leading: 8, bottom: 16, trailing: 8))
+                .background(.ultraThinMaterial)
+                .cornerRadius(12)
+                .opacity(isAnimating ? 1 : 0)
+                .frame(width: 260)
+                .padding(.top, UIScreen.main.bounds.height / 12)
+                .offset(x: drawerOpen ? 15 : 215)
             }
         } //: NavigationStack
     }
