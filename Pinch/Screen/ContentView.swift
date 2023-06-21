@@ -36,6 +36,7 @@ struct ContentView: View {
                             imageOffset = .zero
                         }
                     }
+                    // MARK: - DragGesture
                     .gesture(DragGesture()
                         .onChanged({ value in
                             withAnimation(.linear(duration: 1)) {
@@ -50,6 +51,27 @@ struct ContentView: View {
                                 
                             })
                     )
+                    // MARK: MagnificationGesture
+                    .gesture(MagnificationGesture()
+                        .onChanged({ distance in
+                            withAnimation(.linear) {
+                                if imageScale >= 0 && imageScale <= 5 {
+                                    imageScale = distance
+                                } else if imageScale > 5 {
+                                    imageScale = 5
+                                } else if imageScale <= 1 {
+                                    imageScale = 1
+                                }
+                            }
+                        })
+                            .onEnded({ _ in
+                                if imageScale > 5 {
+                                    imageScale = 5
+                                } else if imageScale < 1 {
+                                    imageScale = 1
+                                    imageOffset = .zero
+                                }
+                            }))
             } //: ZStack
             .navigationTitle("Pinch & Zoom")
             .navigationBarTitleDisplayMode(.inline)
@@ -64,14 +86,12 @@ struct ContentView: View {
             .overlay(alignment: .bottom) {
                 Group {
                     HStack {
-                        
                         // Scale down
                         Button {
                             withAnimation(.spring()) { if imageScale > 1 { imageScale -= 1 } }
                         } label: {
                             ControlImageView(icon: "minus.magnifyingglass")
                         }
-
                         
                         // Reset
                         Button {
@@ -79,7 +99,6 @@ struct ContentView: View {
                         } label: {
                             ControlImageView(icon: "arrow.up.left.and.down.right.magnifyingglass")
                         }
-
                         
                         // Scale up
                         Button {
