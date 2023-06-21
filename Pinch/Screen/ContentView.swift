@@ -50,7 +50,7 @@ struct ContentView: View {
                                 
                             })
                     )
-            } //: ZSTACK
+            } //: ZStack
             .navigationTitle("Pinch & Zoom")
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
@@ -61,7 +61,41 @@ struct ContentView: View {
                     .padding(.horizontal)
                     .padding(.top, 30)
             }
-        } //: NAVIGATION STACK
+            .overlay(alignment: .bottom) {
+                Group {
+                    HStack {
+                        
+                        // Scale down
+                        Button {
+                            withAnimation(.spring()) { if imageScale > 1 { imageScale -= 1 } }
+                        } label: {
+                            ControlImageView(icon: "minus.magnifyingglass")
+                        }
+
+                        
+                        // Reset
+                        Button {
+                            withAnimation(.spring()) { imageScale = 1 }
+                        } label: {
+                            ControlImageView(icon: "arrow.up.left.and.down.right.magnifyingglass")
+                        }
+
+                        
+                        // Scale up
+                        Button {
+                            withAnimation(.spring()) { if imageScale < 5 { imageScale += 1 } }
+                        } label: {
+                            ControlImageView(icon: "plus.magnifyingglass")
+                        }
+
+                    } //: Controls
+                    .padding(EdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20))
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(12)
+                    .opacity(isAnimating ? 1 : 0)
+                }
+            }
+        } //: NavigationStack
     }
 }
 
