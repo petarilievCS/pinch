@@ -15,6 +15,13 @@ struct ContentView: View {
     @State private var imageOffset: CGSize = .zero
     @State private var drawerOpen: Bool = false
     @State private var chevronOpen: Bool = false
+    @State private var pageID: Int = 0
+    
+    // MARK: - Properties
+    let pages: [Page] = pagesData
+    var currentImage: String {
+        return pages[pageID].imageName
+    }
     
     var body: some View {
         NavigationStack {
@@ -22,7 +29,7 @@ struct ContentView: View {
                 Color.clear
                 
                 // MARK: - Page Image
-                Image("magazine-front-cover")
+                Image(currentImage)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .cornerRadius(10)
@@ -132,7 +139,20 @@ struct ContentView: View {
                             }
                             chevronOpen.toggle()
                         }
-                    // Thumbnails
+                    
+                    // Thubmanils
+                    ForEach(pages) { page in
+                        Image(page.thumbnailName)
+                            .resizable()
+                            .scaledToFit()
+                            .cornerRadius(5)
+                            .frame(width: 90)
+                            .shadow(radius: 4)
+                            .onTapGesture {
+                                pageID = page.id
+                            }
+                    }
+                    
                     Spacer()
                     
                 } //: Drawer
